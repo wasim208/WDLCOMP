@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </head>
+    <body style="background-color: whitesmoke;">
+        <nav class="shadow-sm navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <a class="navbar-brand" href="#"><b>Jot Down</b></a>
+              </div>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+              </ul>
+            </div>
+          </nav>
+          <div>
+              <div class="row" style="margin: 10px;">
+                    <div class="col-sm-6">
+                        <img width="50%" style="padding: '10px'; margin: 50px 10px 20px 100px;" src="{{url_for('static', filename = 'undraw_noted.svg')}}">
+                        <h3 style="text-align: center; font-size: xx-large;"><b>Jot Down</b></h3>
+                        <p style="text-align: center; font-size: large;">Jot Down is a online planner and Journal website. Where you can easily maintain your Journal and take notes.</p>
+                    </div>
+                    <div class="col-sm-6" height: 50%;">
+                        <h3 style="text-align: center; font-size: x-large;">Login</h3>
+                        <form action="http://localhost:5000/login" method="POST" style="margin: 40px 40px 10px 40px;">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Username</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" name="username" aria-describedby="emailHelp" placeholder="Enter username">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
+                          </div>
+                          <div>
+                            {% if error %}
+                                    <p><strong>Error:</strong> {{ error }}
+                            {% endif %}
+                          </div>
+                          <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Keep me logged in</label>
+                          </div>
+                          <button style="margin-top: 5px; margin-bottom: 5px;" type="submit" class="btn btn-primary">Login</button>
+                          <p>Dont have an account yet? <a href="signup">Sign Up</a></p>
+                        </form>
+                    </div>
+              </div>
+          </div>
+    </body>
+</html>
