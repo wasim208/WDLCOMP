@@ -2,6 +2,9 @@
 <html>
     <title>Home Page</title>
     <body>
-        <p>welcome to your profile</p>
+        <p>welcome to your profile, {{username}}</p>
+        <form action="http://localhost:5000/home" method="POST">
+            <button type="submit">Logout</button>
+        </form>
     </body>
 </html>

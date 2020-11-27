@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 import sqlite3
 import random
 import string
@@ -11,10 +11,12 @@ def get_random_string():
     return result
 
 app = Flask(__name__)
+app.secret_key = 'kiminonawa'
 
 @app.route('/')
-def hello_world():
-    return 'Hello Mars'
+def index():
+    return redirect(url_for('home'))
+
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -26,8 +28,11 @@ def login():
             cur = con.cursor()
             cur.execute('SELECT * from Users WHERE username = ?', [username,])
             details = cur.fetchall()
-            print(details, file=sys.stdout)
-            if(details[0][2] == password):
+            if(len(details) == 0):
+                error = "wrong credentials"
+            elif(details[0][2] == password):
+                session['id'] = details[0][3]
+                session['username'] = details[0][0]
                 return redirect(url_for('home'))
             else:
                 error = "wrong credentials"
@@ -41,17 +46,36 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        Id = get_random_string()
-        with sqlite3.connect('database.db') as con:
-            con.execute("INSERT INTO Users (username, email, password, id) VALUES (?, ?, ?, ?)", (username, email, password, Id))
-            con.commit()
-            con.close()
-            return redirect(url_for('home'))
-    return render_template('signup.html', errors = error)
+        confpass = request.form['confpass']
+        if(password != confpass):
+            error = "Passwords doesn't match"
+        else:
+            Id = get_random_string()
+            con = sqlite3.connect('database.db')
+            cur = con.cursor()
+            cur.execute("SELECT * from Users WHERE username = ?", (username,))
+            details = cur.fetchall()
+            if(len(details) == 0):
+                con.execute("INSERT INTO Users (username, email, password, id) VALUES (?, ?, ?, ?)", (username, email, password, Id))
+                con.commit()
+                con.close()
+                session['id'] = Id
+                session['username'] = username
+                return redirect(url_for('home'))
+            else:
+                error = "Username taken"
+    return render_template('signup.html', error = error)
 
-@app.route('/home')
+@app.route('/home', methods = ['POST', 'GET'])
 def home():
-    return render_template('home.html')
+    if request.method == 'POST':
+        session.pop('id', None)
+        return redirect(url_for('login'))
+    else:
+        if 'id' in session:
+            return render_template('home.html', username = session['username'])
+        else:
+            return redirect('login')
 
 if __name__ == '__main__':
     app.debug = True

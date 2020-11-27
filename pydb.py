@@ -7,8 +7,8 @@ cur = conn.cursor()
 
 usrname = "light"
 
-cur.execute("SELECT * from Users WHERE username = ?", (usrname,))
+cur.execute("SELECT * from Users")
 
 row = cur.fetchall()
 
-print(row[0][2])
+print(row)
