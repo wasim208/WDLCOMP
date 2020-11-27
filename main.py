@@ -72,6 +72,19 @@ def signup():
 
 @app.route('/home', methods = ['POST', 'GET'])
 def home():
+    if(request.method == 'POST'):
+        print("post called")
+        username = session['username']
+        eventname = request.form['eventname']
+        date = request.form['dateinput']
+        stime = request.form['stime']
+        etime = request.form['etime']
+        descrip = request.form['description']
+        con = sqlite3.connect('database.db')
+        con.execute("INSERT INTO events (username, eventName, date, startTime, endTime, description) VALUES (?, ?, ?, ?, ?, ?)", (username, eventname, date, stime, etime, descrip))
+        con.commit()
+        con.close()
+        return redirect(url_for('home'))
     if 'id' in session:
         return render_template('home.html', username = session['username'])
     else:

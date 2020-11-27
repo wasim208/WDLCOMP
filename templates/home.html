@@ -51,7 +51,7 @@
                                 <form action="/home" method="POST">
                                   <div class="form-group">
                                     <label for="exampleInputEmail1">Event Name</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" name="username" aria-describedby="emailHelp" placeholder="Enter Event Name">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" name="eventname" aria-describedby="emailHelp" placeholder="Enter Event Name">
                                   </div>
                                   <div class="form-group">
                                     <label for="dateinput">Date</label>
@@ -64,7 +64,7 @@
                                               <label for="appt">Start Time</label>
                                             </div>
                                             <div class="row">
-                                              <input type="time" class="form-control" id="appt" name="appt"required>
+                                              <input type="time" class="form-control" id="appt" name="stime"required>
                                               
                                             </div>
                                         </div>
@@ -74,20 +74,20 @@
                                               <label for="appt">End Time</label>
                                             </div>
                                             <div class="row">
-                                              <input type="time" class="form-control" id="appt" name="appt"required>
+                                              <input type="time" class="form-control" id="appt" name="etime"required>
                                             </div>
                                         </div>
                                       </div>
                                   </div>
                                   <div class="form-group">
-                                    <textarea class="form-control" rows=4 placeholder="Description" required></textarea>
+                                    <textarea class="form-control" rows=4 placeholder="Description" name="description" required></textarea>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
                                   </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                       </div>
                     </div>          

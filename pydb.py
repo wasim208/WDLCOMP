@@ -7,7 +7,7 @@ cur = conn.cursor()
 
 usrname = "light"
 
-cur.execute("SELECT * from Users")
+cur.execute("SELECT * from events")
 
 row = cur.fetchall()
 
