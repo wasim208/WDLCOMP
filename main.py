@@ -20,6 +20,8 @@ def index():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    if 'id' in session:
+        return redirect(url_for('home'))
     error = None
     if(request.method == 'POST'):
         username = request.form['username']
@@ -41,6 +43,8 @@ def login():
 
 @app.route('/signup', methods = ['POST', 'GET'])
 def signup():
+    if 'id' in session:
+        return redirect(url_for('home'))
     error = None
     if(request.method == 'POST'):
         username = request.form['username']
@@ -68,14 +72,15 @@ def signup():
 
 @app.route('/home', methods = ['POST', 'GET'])
 def home():
-    if request.method == 'POST':
-        session.pop('id', None)
-        return redirect(url_for('login'))
+    if 'id' in session:
+        return render_template('home.html', username = session['username'])
     else:
-        if 'id' in session:
-            return render_template('home.html', username = session['username'])
-        else:
-            return redirect('login')
+        return redirect('login')
+
+@app.route('/logout')
+def logout():
+    session.pop('id', None)
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug = True)
