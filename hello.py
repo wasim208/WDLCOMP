@@ -20,6 +20,8 @@ def index():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    if 'id' in session:
+        return redirect(url_for('home'))
     error = None
     if(request.method == 'POST'):
         username = request.form['username']
@@ -41,6 +43,8 @@ def login():
 
 @app.route('/signup', methods = ['POST', 'GET'])
 def signup():
+    if 'id' in session:
+        return redirect(url_for('home'))
     error = None
     if(request.method == 'POST'):
         username = request.form['username']
