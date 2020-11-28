@@ -3,6 +3,7 @@ import sqlite3
 import random
 import string
 import sys
+from pydb import fetchEvents
 
 letters = string.ascii_lowercase
 
@@ -86,7 +87,8 @@ def home():
         con.close()
         return redirect(url_for('home'))
     if 'id' in session:
-        return render_template('home.html', username = session['username'])
+        events=fetchEvents(session['username'])
+        return render_template('home.html', username = session['username'], e=events, no=len(events), tempdate="1234")
     else:
         return redirect('login')
 

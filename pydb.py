@@ -1,14 +1,9 @@
 import sqlite3
-
-conn = sqlite3.connect('database.db')
-print("Opened database successfully")
-
-cur = conn.cursor()
-
-usrname = "light"
-
-cur.execute("SELECT * from events")
-
-row = cur.fetchall()
-
-print(row)
+def fetchEvents(username):
+    conn = sqlite3.connect('database.db')
+    print("Opened database successfully")
+    cur = conn.cursor()
+    cur.execute("SELECT * from events WHERE username=:user order by date(date)asc,startTime asc;",{'user':username})
+    row = cur.fetchall()
+    print(row)
+    return row
