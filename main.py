@@ -86,7 +86,11 @@ def home():
         con.close()
         return redirect(url_for('home'))
     if 'id' in session:
-        return render_template('home.html', username = session['username'])
+        con = sqlite3.connect('database.db')
+        cur = con.cursor()
+        cur.execute("SELECT * FROM events WHERE username = ?", (session['username'],))
+        dataset = cur.fetchall()
+        return render_template('home.html', username = session['username'], dataset = dataset)
     else:
         return redirect('login')
 
