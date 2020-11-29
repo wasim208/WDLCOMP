@@ -3,13 +3,18 @@ import sqlite3
 import random
 import string
 import sys
-from pydb import fetchEvents
+import timeago
+from datetime import datetime
+from pydb import fetchEvents, fetchUser, fetchFriendsdata, fetchFriends, fetchFriendRequests, fetchTweets
 
 letters = string.ascii_lowercase
 
 def get_random_string():
     result = ''.join(random.choice(letters) for i in range(15))
     return result
+
+def get_random_number():
+    return random.randint(0, 99999999999)
 
 app = Flask(__name__)
 app.secret_key = 'kiminonawa'
@@ -71,24 +76,31 @@ def signup():
                 error = "Username taken"
     return render_template('signup.html', error = error)
 
-@app.route('/home', methods = ['POST', 'GET'])
+@app.route('/home')
 def home():
+    if 'id' in session:
+        return render_template('home.html')
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/events', methods = ['POST', 'GET'])
+def events():
     if(request.method == 'POST'):
-        print("post called")
         username = session['username']
         eventname = request.form['eventname']
         date = request.form['dateinput']
         stime = request.form['stime']
         etime = request.form['etime']
         descrip = request.form['description']
+        eventId = get_random_number()
         con = sqlite3.connect('database.db')
-        con.execute("INSERT INTO events (username, eventName, date, startTime, endTime, description) VALUES (?, ?, ?, ?, ?, ?)", (username, eventname, date, stime, etime, descrip))
+        con.execute("INSERT INTO events (username, eventName, date, startTime, endTime, description, eventId) VALUES (?, ?, ?, ?, ?, ?, ?)", (username, eventname, date, stime, etime, descrip, eventId))
         con.commit()
         con.close()
-        return redirect(url_for('home'))
+        return redirect(url_for('events'))
     if 'id' in session:
         events=fetchEvents(session['username'])
-        return render_template('home.html', username = session['username'], e=events, no=len(events), tempdate="1234")
+        return render_template('events.html', username = session['username'], e=events, no=len(events), tempdate="1234")
     else:
         return redirect('login')
 
@@ -96,6 +108,161 @@ def home():
 def logout():
     session.pop('id', None)
     return redirect(url_for('login'))
+
+@app.route('/editevent', methods = ['POST', 'GET'])
+def editEvent():
+    if request.method == 'POST':
+        username = session['username']
+        eventname = request.form['eventname']
+        date = request.form['dateinput']
+        stime = request.form['stime']
+        etime = request.form['etime']
+        descrip = request.form['description']
+        eventId = request.form['eventId']
+        con = sqlite3.connect('database.db')
+        con.execute('''UPDATE events SET username = ?,
+                                         eventName = ?,
+                                         date = ?,
+                                         startTime = ?,
+                                         endTime = ?,
+                                         description = ?
+                                         WHERE eventId = ?''', (username, eventname, date, stime, etime, descrip, eventId))
+        con.commit()
+        con.close()
+        return redirect(url_for('events'))
+    return redirect(url_for('events'))
+
+@app.route('/update', methods = ['POST', 'GET'])
+def update():
+    if request.method == 'POST':
+        eventId = request.form['eventId']
+        con = sqlite3.connect('database.db')
+        cur = con.cursor()
+        cur.execute("SELECT * FROM events WHERE eventId = ?", (eventId,))
+        data = cur.fetchall()
+        con.close()
+        return render_template("editEvent.html", data = data[0])
+    return redirect('home')
+
+@app.route('/delete', methods = ['POST', 'GET'])
+def delete():
+    if request.method == 'POST':
+        eventId = request.form['eventId']
+        con = sqlite3.connect('database.db')
+        con.execute("DELETE FROM events WHERE eventId = ?", (eventId,))
+        con.commit()
+        con.close()
+        return redirect(url_for('events'))
+    redirect(url_for('events'))
+
+@app.route('/profile')
+def profile():
+    if 'id' in session:
+        data = fetchUser(session['username'])
+        return render_template('profile.html', username = session['username'], data = data[0])
+    return redirect('home')
+
+@app.route('/friends', methods = ['POST', 'GET'])
+def friends():
+    if request.method == 'POST':
+        username = session['username']
+        suser = request.form['suser']
+        suserData = fetchUser(suser)
+        friends = fetchFriends(username)
+        friendsdata = fetchFriendsdata(username)
+        if(len(suserData) == 0):
+            return render_template('friends.html', msg = "No such user found", friends = friendsdata)
+        else:
+            if suserData[0][0] in friends:
+                return render_template('friends.html', msg = "User alreay your friend.", friends = friendsdata)
+            elif suserData[0][0] == username:
+                return render_template('friends.html', msg = "Find a friend other than yourself.", friends = friendsdata)
+            else:
+                return render_template('friends.html', msg = "User found" , sfriend = suserData, friends = friendsdata)
+    if 'id' in session:
+        username = session['username']
+        friendsdata = fetchFriendsdata(username)
+        return render_template('friends.html', msg = "Search for friends to connect with them.", friends = friendsdata)   
+    return render_template('friends.html', msg = "Search for friends to connect with them.")
+
+@app.route('/notifications')
+def notifications():
+    if 'id' in session:
+        username = session['username']
+        friendRequests = fetchFriendRequests(username)
+        frndData = []
+        for i in friendRequests:
+            row = fetchUser(i[0])
+            frndData.append(row)
+        return render_template('notifications.html', frndData = frndData)
+
+@app.route('/sendfrequest', methods = ['POST'])
+def sendfrequest():
+    if request.method == 'POST':
+        username = session['username']
+        fusername = request.form['fuser']
+        con = sqlite3.connect('database.db')
+        con.execute("INSERT INTO frequest (fromUser, toUser) VALUES (?, ?)", (username, fusername))
+        con.commit()
+        con.close()
+        return redirect(url_for('friends'))
+
+@app.route('/accept', methods = ['POST'])
+def accept():
+    if request.method == 'POST':
+        username = session['username']
+        fusername = request.form['fuser']
+        userFriends = fetchFriends(username)
+        fuserFriends = fetchFriends(fusername)
+        userFriends.append(fusername)
+        fuserFriends.append(username)
+        new_u = ','.join(userFriends)
+        new_f = ','.join(fuserFriends)
+        con = sqlite3.connect('database.db')
+        con.execute("UPDATE Users SET friends = ? WHERE username = ?", (new_u, username))
+        con.execute("UPDATE Users SET friends = ? WHERE username = ?", (new_f, fusername))
+        con.execute("DELETE FROM frequest WHERE fromUser = ? AND toUser = ?", (fusername, username))
+        con.commit()
+        con.close()
+        return redirect(url_for('notifications'))
+
+@app.route('/decline', methods = ['POST'])
+def decline():
+    if request.method == 'POST':
+        username = session['username']
+        fusername = request.form['fuser']
+        con = sqlite3.connect('database.db')
+        con.execute("DELETE FROM frequest WHERE fromUser = ? AND toUser = ?", (fusername, username))
+        con.commit()
+        con.close()
+        return redirect(url_for('notifications'))
+
+@app.route('/tweets', methods = ['POST', 'GET'])
+def tweets():
+    if request.method == 'POST':
+        username = session['username']
+        message = request.form['message']
+        posttime = str(datetime.now())[0:19]
+        Id = random.randint(0, 9999999999)
+        con = sqlite3.connect('database.db')
+        con.execute("INSERT INTO tweets (username, message, postTime, Id) VALUES (?, ?, ?, ?)", (username, message, posttime, Id))
+        con.commit()
+        con.close()
+    username = session['username']
+    tweets = []
+    friends = fetchFriends(username)
+    friends.append(username)
+    now = str(datetime.now())[0:19]
+    for i in friends:
+        row = fetchTweets(i)
+        for j in row:
+            j = list(j)
+            ago = timeago.format(j[2], now)
+            j.append(ago)
+            j = [j[2]] + j
+            tweets.append(j)
+    tweets.sort(reverse = True)
+    return render_template('tweets.html', tweets = tweets)
 
 if __name__ == '__main__':
     app.run(debug = True)
