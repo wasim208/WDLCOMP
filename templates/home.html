@@ -1,19 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <title>Document</title>
+    <style>header.masthead{position:relative;background-color:#343a40;background-size:cover;padding-top:8rem;padding-bottom:8rem}header.masthead .overlay{position:absolute;background-color:#212529;height:100%;width:100%;top:0;left:0;opacity:.3}@media (min-width:768px){header.masthead{padding-top:12rem;padding-bottom:12rem}}.showcase .showcase-text{padding:3rem}.showcase .showcase-img{min-height:30rem;background-size:cover}@media (min-width:768px){.showcase .showcase-text{padding:7rem}}.features-icons{padding-top:7rem;padding-bottom:7rem}.features-icons .features-icons-item{max-width:20rem}.features-icons .features-icons-item .features-icons-icon{height:7rem}.features-icons .features-icons-item .features-icons-icon i{font-size:4.5rem}.testimonials{padding-top:7rem;padding-bottom:7rem}.testimonials .testimonial-item{max-width:18rem}.testimonials .testimonial-item img{max-width:12rem;box-shadow:0 5px 5px 0 #adb5bd}.call-to-action{position:relative;background-color:#343a40;background-size:cover;padding-top:7rem;padding-bottom:7rem}.call-to-action .overlay{position:absolute;background-color:#212529;height:100%;width:100%;top:0;left:0;opacity:.3}footer.footer{padding-top:4rem;padding-bottom:4rem}</style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <nav class="navbar navbar-expand navbar-light bg-transparent sticky-top" style="background-color: rgba(0, 0, 0, 0.664) !important;">
-        <a class="navbar-brand text-white" href="">Jot Down</a>
+    <nav class="navbar navbar-expand navbar-light sticky-top" style="background-color: rgba(52, 52, 52) !important;">
+        <a class="navbar-brand text-white" href="/home">Jot Down</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/notifications">Notification</a>
-          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/friends">Friends</a>
           <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/tweets">Tweets</a>
           <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/events">Events</a>
+          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/friends">Friends</a>
+          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/notifications">Notification{% if alert %}<span style="border-radius: 50%; width: 25px;" class="badge badge-danger">{{alert}}</span>{% endif %}</a>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -22,7 +31,6 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="profile">Profile</a>
-                    <!-- <a class="dropdown-item" href="#">Another action</a> -->
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/logout">Logout</a>
                 </div>
@@ -30,7 +38,90 @@
           </ul>
         </div>
       </nav>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-      </body>
-      </html>
+    <header class="jumbotron text-white text-center" style="background:url('../static/assets/img/bg-masthead-2.jpg')no-repeat center center;background-size:cover; height: 350px; margin-bottom: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="mb-5"><span style="font-family: 'Cinzel', serif;"><b>Jot Down</b></span> is a simple and easy to use webapp that lets you connet with your friends and share your thoughts through tweets and share events.</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="features-icons bg-light text-center" style="margin-top: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><svg class="m-auto text-primary" data-bs-hover-animate="pulse" xmlns="http://www.w3.org/2000/svg" width="65%" height="65%" viewBox="0 0 16 16" fill="currentColor" class="bi bi-chat-left-quote m-auto text-primary"><path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v11.586l2-2A2 2 0 0 1 4.414 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path fill-rule="evenodd" d="M7.066 4.76A1.665 1.665 0 0 0 4 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z"></path></svg></div>
+                        <h3>Tweet</h3>
+                        <p class="lead mb-0">Share your stories with your friends. Let them know whats new in your life.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><i class="icon-event m-auto text-primary" data-bs-hover-animate="pulse"></i></div>
+                        <h3>Plan</h3>
+                        <p class="lead mb-0">Quickly schedule meetings and events, also send it your friends so that they can join too.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><i class="icon-user-follow m-auto text-primary" data-bs-hover-animate="pulse"></i></div>
+                        <h3>Connect</h3>
+                        <p class="lead mb-0">Connect with friends, family and other people you know.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="showcase">
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
+                <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image:url('../static/assets/img/bg-showcase-1.jpg'); background-position: center;"><span></span></div>
+                <div class="col-lg-6 my-auto order-lg-1 showcase-text">
+                    <h2>Tweets</h2>
+                    <p class="lead mb-0">Tweets are very simple and quick way to share your thoughts with your friends. Use emojis to make them more attractive. Your tweets can only be seen by your friends.</p>
+                    <br>
+                    <button type="button" class="btn btn-primary"><a href="/tweets" style="text-decoration: none; color: white;">Start Tweeting!</a></button>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 text-white showcase-img" style="background-image:url('../static/assets/img/bg-showcase-2.jpg');"><span></span></div>
+                <div class="col-lg-6 my-auto order-lg-1 showcase-text">
+                    <h2>Events</h2>
+                    <p class="lead mb-0">You can easily schedule your upcoming meetings and events. You can edit them it your will and also share it with your friends so that they can also join.</p>
+                    <br>
+                    <button type="button" class="btn btn-primary"><a href="/events" style="text-decoration: none; color: white;">Start Planning!</a></button>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image:url('../static/assets/img/bg-showcase-3.jpg');"><span></span></div>
+                <div class="col-lg-6 my-auto order-lg-1 showcase-text">
+                    <h2>Connect</h2>
+                    <p class="lead mb-0">Connet with your friends by send them friend requests. Once accepted you can view their tweets and vice-versa. You can also share your events with one another.</p>
+                    <br>
+                    <button type="button" class="btn btn-primary"><a href="/friends" style="text-decoration: none; color: white;">Start Connecting!</a></button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 my-auto h-100 text-center text-lg-left">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="#">Terms of &nbsp;Use</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">© Jot Down 2020. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="../https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/assets/js/script.js"></script>
+</body>
+
+</html>

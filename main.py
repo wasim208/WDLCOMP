@@ -5,7 +5,7 @@ import string
 import sys
 import timeago
 from datetime import datetime
-from pydb import fetchEvents, fetchUser, fetchFriendsdata, fetchFriends, fetchFriendRequests, fetchTweets
+from pydb import fetchEvents, fetchUser, fetchFriendsdata, fetchFriends, fetchFriendRequests, fetchTweets, updateNumEvents, updateNumFriends, updateNumTweets, checkRequestExists, unfollowUser
 
 letters = string.ascii_lowercase
 
@@ -100,6 +100,9 @@ def events():
         return redirect(url_for('events'))
     if 'id' in session:
         events=fetchEvents(session['username'])
+        frndRequests = fetchFriendRequests(session['username'])
+        if(len(frndRequests) > 0):
+            return render_template('events.html', username = session['username'], e=events, no=len(events), tempdate="1234", alrert = len(frndRequests))
         return render_template('events.html', username = session['username'], e=events, no=len(events), tempdate="1234")
     else:
         return redirect('login')
@@ -158,7 +161,14 @@ def delete():
 @app.route('/profile')
 def profile():
     if 'id' in session:
+        username = session['username']
+        updateNumEvents(username)
+        updateNumFriends(username)
+        updateNumTweets(username)
         data = fetchUser(session['username'])
+        frndRequests = fetchFriendRequests(session['username'])
+        if(len(frndRequests) > 0):
+            return render_template('profile.html', username = session['username'], data = data[0], alert = len(frndRequests))
         return render_template('profile.html', username = session['username'], data = data[0])
     return redirect('home')
 
@@ -170,18 +180,34 @@ def friends():
         suserData = fetchUser(suser)
         friends = fetchFriends(username)
         friendsdata = fetchFriendsdata(username)
+        frndRequests = fetchFriendRequests(username)
+        if(checkRequestExists(username, suser)):
+            if(len(frndRequests) > 0):
+                return render_template('friends.html', msg = "Request already sent to user", friends = friendsdata, alert = len(frndRequests))
+            return render_template('friends.html', msg = "Request already sent to user", friends = friendsdata)
         if(len(suserData) == 0):
+            if(len(frndRequests) > 0):
+                return render_template('friends.html', msg = "No such user found", friends = friendsdata, alert = len(frndRequests))
             return render_template('friends.html', msg = "No such user found", friends = friendsdata)
         else:
             if suserData[0][0] in friends:
-                return render_template('friends.html', msg = "User alreay your friend.", friends = friendsdata)
+                if(len(frndRequests) > 0):
+                    return render_template('friends.html', msg = "User already your friend.", friends = friendsdata, alert = len(frndRequests))
+                return render_template('friends.html', msg = "User already your friend.", friends = friendsdata)
             elif suserData[0][0] == username:
+                if(len(frndRequests) > 0):
+                    return render_template('friends.html', msg = "Find a friend other than yourself.", friends = friendsdata, alert = len(frndRequests))
                 return render_template('friends.html', msg = "Find a friend other than yourself.", friends = friendsdata)
             else:
+                if(len(frndRequests) > 0):
+                    return render_template('friends.html', msg = "User found" , sfriend = suserData, friends = friendsdata, alert = len(frndRequests))
                 return render_template('friends.html', msg = "User found" , sfriend = suserData, friends = friendsdata)
     if 'id' in session:
         username = session['username']
         friendsdata = fetchFriendsdata(username)
+        frndRequests = fetchFriendRequests(username)
+        if(len(frndRequests) > 0):
+            return render_template('friends.html', msg = "Search for friends to connect with them.", friends = friendsdata, alert = len(frndRequests))
         return render_template('friends.html', msg = "Search for friends to connect with them.", friends = friendsdata)   
     return render_template('friends.html', msg = "Search for friends to connect with them.")
 
@@ -194,7 +220,9 @@ def notifications():
         for i in friendRequests:
             row = fetchUser(i[0])
             frndData.append(row)
-        return render_template('notifications.html', frndData = frndData)
+        if(len(frndData) == 0):
+            return render_template('notifications.html', msg = "No new friend request")
+        return render_template('notifications.html', frndData = frndData, alert = len(friendRequests))
 
 @app.route('/sendfrequest', methods = ['POST'])
 def sendfrequest():
@@ -248,21 +276,76 @@ def tweets():
         con.execute("INSERT INTO tweets (username, message, postTime, Id) VALUES (?, ?, ?, ?)", (username, message, posttime, Id))
         con.commit()
         con.close()
-    username = session['username']
-    tweets = []
-    friends = fetchFriends(username)
-    friends.append(username)
-    now = str(datetime.now())[0:19]
-    for i in friends:
-        row = fetchTweets(i)
-        for j in row:
-            j = list(j)
-            ago = timeago.format(j[2], now)
-            j.append(ago)
-            j = [j[2]] + j
-            tweets.append(j)
-    tweets.sort(reverse = True)
-    return render_template('tweets.html', tweets = tweets)
+    if 'id' in session:
+        username = session['username']
+        frndRequests = fetchFriendRequests(username)
+        tweets = []
+        friends = fetchFriends(username)
+        friends.append(username)
+        now = str(datetime.now())[0:19]
+        for i in friends:
+            row = fetchTweets(i)
+            for j in row:
+                j = list(j)
+                ago = timeago.format(j[2], now)
+                j.append(ago)
+                j = [j[2]] + j
+                tweets.append(j)
+        tweets.sort(reverse = True)
+        if(len(frndRequests) > 0):
+            return render_template('tweets.html', tweets = tweets, alert = len(frndRequests))
+        return render_template('tweets.html', tweets = tweets)
+    return redirect(url_for('home'))
+
+@app.route('/share', methods = ['POST'])
+def share():
+    if request.method == 'POST':
+        eventId = request.form['eventId']
+        con = sqlite3.connect('database.db')
+        cur = con.cursor()
+        cur.execute("SELECT * FROM events WHERE eventId = ?", (eventId,))
+        data = cur.fetchall()
+        con.close()
+        friends = fetchFriends(session['username'])
+        if(len(friends) == 0):
+            return render_template("share.html", data = data[0], msg = "You have no friends yet, connet with friends to share")
+        return render_template("share.html", data = data[0], friends = friends)
+    return redirect('home')
+
+@app.route('/shareevent', methods = ['POST'])
+def shareevent():
+    if request.method == 'POST':
+        username = request.form['username']
+        eventname = request.form['eventname']
+        date = request.form['dateinput']
+        stime = request.form['stime']
+        etime = request.form['etime']
+        descrip = request.form['description']
+        eventId = get_random_number()
+        con = sqlite3.connect('database.db')
+        con.execute("INSERT INTO events (username, eventName, date, startTime, endTime, description, eventId) VALUES (?, ?, ?, ?, ?, ?, ?)", (username, eventname, date, stime, etime, descrip, eventId))
+        con.commit()
+        con.close()
+        return redirect(url_for('events'))
+
+@app.route('/statusupdate', methods = ['POST', 'GET'])
+def statusupdate():
+    if request.method == "POST":
+        username = session['username']
+        status = request.form['status']
+        con = sqlite3.connect('database.db')
+        con.execute("UPDATE Users SET status = ? WHERE username = ?", (status, username))
+        con.commit()
+        con.close()
+        return redirect(url_for('profile'))
+
+@app.route('/unfollow', methods = ['POST'])
+def unfollow():
+    if request.method == 'POST':
+        username = session['username']
+        fusername = request.form['fuser']
+        unfollowUser(username, fusername)
+        return redirect(url_for('friends'))
 
 if __name__ == '__main__':
     app.run(debug = True)

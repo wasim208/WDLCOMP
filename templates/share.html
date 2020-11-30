@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>Share {{data[1]}}</title>
+</head>
+<body>
+    <form action="/shareevent" method="POST">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Event Name</label>
+          <input type="text" value="{{data[1]}}" class="form-control" id="exampleInputEmail1" name="eventname" aria-describedby="emailHelp" placeholder="Enter Event Name" disabled>
+        </div>
+        <div style="display: none;">
+            <input name="eventId" value="{{data[6]}}" disabled>
+        </div>
+        <div class="form-group">
+          <label for="dateinput">Date</label>
+          <input type="date" value="{{data[2]}}" class="form-control" id="dateinput" name="dateinput" disabled>
+        </div>
+        <div class="form-group">
+            <div class="row mx-auto">
+              <div class="col">
+                  <div class="row">
+                    <label for="appt">Start Time</label>
+                  </div>
+                  <div class="row">
+                    <input type="time" value="{{data[3]}}" class="form-control" id="appt" name="stime" disabled>
+                  </div>
+              </div>
+              &nbsp;&nbsp;
+              <div class="col">
+                <div class="row">
+                    <label for="appt">End Time</label>
+                  </div>
+                  <div class="row">
+                    <input type="time" value="{{data[4]}}" class="form-control" id="appt" name="etime" disabled>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group">
+          <textarea class="form-control" rows=4 placeholder="Description" name="description" disabled>{{data[5]}}</textarea>
+        </div>
+        <hr>
+        <div>
+          <h4 style="font-family: sans-serif; text-align: center;">Share it with</h4>
+            <div class="wd-100 d-flex justify-content-center" style="align-content: center;">
+                <div class="form-group">
+                    <select name="username" style="align-self: center; vertical-align: middle; padding: 4px; border-radius: 5px;">
+                    {% for frnd in friends %}
+                        <option value="{{frnd}}">{{frnd}}</option>
+                    {% endfor %}
+                    </select>
+                    <button class="btn btn-primary" type="submit">Share</button>
+                </div>
+            </div>
+        {% if msg %}
+            <p style="text-align: center;">{{msg}}</p>
+        {% endif %}
+        </div>
+      </form>
+</body>
+<html>

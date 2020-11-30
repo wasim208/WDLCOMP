@@ -7,13 +7,13 @@
     <title>Document</title>
 </head>
 <body style="background-color: whitesmoke;">
-    <nav class="navbar navbar-expand navbar-light bg-transparent sticky-top" style="background-color: rgba(0, 0, 0, 0.664) !important;">
+    <nav class="navbar navbar-expand navbar-light sticky-top" style="background-color: rgba(52, 52, 52) !important;">
         <a class="navbar-brand text-white" href="/home">Jot Down</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/notifications">Notification</a>
-          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/friends">Friends</a>
-          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/tweets">Tweets</a>
-          <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/events">Events</a>
+            <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/tweets">Tweets</a>
+            <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/events">Events</a>
+            <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/friends">Friends</a>
+            <a class="navbar-nav text-white ml-auto" style="text-decoration: none;" href="/notifications">Notification{% if alert %}<span style="border-radius: 50%; width: 25px;" class="badge badge-danger">{{alert}}</span>{% endif %}</a>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,26 +30,29 @@
           </ul>
         </div>
       </nav>
-      <h2 style="text-align: center; margin-top: 10px;">Friend Requests</h2>
+      <h2 style="text-align: center; margin-top: 10px; font-family: sans-serif;">Friend Requests</h2>
+      {% if msg %}
+            <p style="text-align: center;">{{msg}}</p>
+      {% endif %}
       {% for fnd in frndData %}
         {% for data in fnd %}
-            <div class="row text-center" style="background-color: aqua; margin: 20px; padding: 10px; border-radius: 10px;">
+            <div class="shadow row text-center" style="background-color: white; margin: 20px; padding: 10px; border-radius: 10px; border: 1px solid blue;">
                 <div class="col-sm-4">
-                    <p>Username: <br>{{data[0]}}</p>
+                    <p style="font-size: large;">Username: <br><b>{{data[0]}}</b></p>
                 </div>
                 <div class="col-sm-4">
-                    <p>Status: <br>{{data[4]}}</p>
+                    <p style="font-size: large;">Status: <br><i>{{data[4]}}</i></p>
                 </div>
                 <div class="col-sm-2">
                     <form action="/accept" method="POST">
                         <input style="display: none;" value="{{data[0]}}" name = "fuser">
-                        <button style="align-content: center; margin-top: 15px;" type="submit">Accept</button>
+                        <button class="btn btn-primary" style="align-content: center; margin-top: 15px;" type="submit">Accept</button>
                     </form>
                 </div>
                 <div class="col-sm-2">
                     <form action="/decline" method="POST">
                         <input style="display: none;" value="{{data[0]}}" name = "fuser">
-                        <button style="align-content: center; margin-top: 15px;" type="submit">Decline</button>
+                        <button class="btn btn-danger" style="align-content: center; margin-top: 15px;" type="submit">Decline</button>
                     </form>
                 </div>
             </div>
