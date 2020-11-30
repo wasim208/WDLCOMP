@@ -1,13 +1,21 @@
 import sqlite3
+from datetime import datetime
 def fetchEvents(username):
     conn = sqlite3.connect('database.db')
     print("Opened database successfully")
     cur = conn.cursor()
     cur.execute("SELECT * from events WHERE username=:user order by date(date)asc,startTime asc;",{'user':username})
     row = cur.fetchall()
+    final = []
+    for i in row:
+        str_time = i[2] + " " + i[4]
+        date_time_obj = datetime.strptime(str_time, '%Y-%m-%d %H:%M')
+        now = datetime.now()
+        if date_time_obj > now:
+            final.append(i)
     conn.close()
-    print(row)
-    return row
+    print(final)
+    return final
 
 def fetchUser(username):
     conn = sqlite3.connect('database.db')
