@@ -10,14 +10,14 @@
     <form action="/shareevent" method="POST">
         <div class="form-group">
           <label for="exampleInputEmail1">Event Name</label>
-          <input type="text" value="{{data[1]}}" class="form-control" id="exampleInputEmail1" name="eventname" aria-describedby="emailHelp" placeholder="Enter Event Name" disabled>
+          <input type="text" value="{{data[1]}}" class="form-control" id="exampleInputEmail1" name="eventname" aria-describedby="emailHelp" placeholder="Enter Event Name">
         </div>
         <div style="display: none;">
-            <input name="eventId" value="{{data[6]}}" disabled>
+            <input name="eventId" value="{{data[6]}}">
         </div>
         <div class="form-group">
           <label for="dateinput">Date</label>
-          <input type="date" value="{{data[2]}}" class="form-control" id="dateinput" name="dateinput" disabled>
+          <input type="date" value="{{data[2]}}" class="form-control" id="dateinput" name="dateinput">
         </div>
         <div class="form-group">
             <div class="row mx-auto">
@@ -26,7 +26,7 @@
                     <label for="appt">Start Time</label>
                   </div>
                   <div class="row">
-                    <input type="time" value="{{data[3]}}" class="form-control" id="appt" name="stime" disabled>
+                    <input type="time" value="{{data[3]}}" class="form-control" id="appt" name="stime">
                   </div>
               </div>
               &nbsp;&nbsp;
@@ -35,13 +35,13 @@
                     <label for="appt">End Time</label>
                   </div>
                   <div class="row">
-                    <input type="time" value="{{data[4]}}" class="form-control" id="appt" name="etime" disabled>
+                    <input type="time" value="{{data[4]}}" class="form-control" id="appt" name="etime">
                   </div>
               </div>
             </div>
         </div>
         <div class="form-group">
-          <textarea class="form-control" rows=4 placeholder="Description" name="description" disabled>{{data[5]}}</textarea>
+          <textarea class="form-control" rows=4 placeholder="Description" name="description">{{data[5]}}</textarea>
         </div>
         <hr>
         <div>

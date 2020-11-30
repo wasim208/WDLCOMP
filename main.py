@@ -102,7 +102,7 @@ def events():
         events=fetchEvents(session['username'])
         frndRequests = fetchFriendRequests(session['username'])
         if(len(frndRequests) > 0):
-            return render_template('events.html', username = session['username'], e=events, no=len(events), tempdate="1234", alrert = len(frndRequests))
+            return render_template('events.html', username = session['username'], e=events, no=len(events), tempdate="1234", alert = len(frndRequests))
         return render_template('events.html', username = session['username'], e=events, no=len(events), tempdate="1234")
     else:
         return redirect('login')
@@ -315,6 +315,7 @@ def share():
 @app.route('/shareevent', methods = ['POST'])
 def shareevent():
     if request.method == 'POST':
+        shareuser = "Shared by: " + session['username']
         username = request.form['username']
         eventname = request.form['eventname']
         date = request.form['dateinput']
@@ -323,7 +324,7 @@ def shareevent():
         descrip = request.form['description']
         eventId = get_random_number()
         con = sqlite3.connect('database.db')
-        con.execute("INSERT INTO events (username, eventName, date, startTime, endTime, description, eventId) VALUES (?, ?, ?, ?, ?, ?, ?)", (username, eventname, date, stime, etime, descrip, eventId))
+        con.execute("INSERT INTO events (username, eventName, date, startTime, endTime, description, eventId, share) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (username, eventname, date, stime, etime, descrip, eventId, shareuser))
         con.commit()
         con.close()
         return redirect(url_for('events'))
@@ -346,6 +347,17 @@ def unfollow():
         fusername = request.form['fuser']
         unfollowUser(username, fusername)
         return redirect(url_for('friends'))
+
+@app.route('/done', methods = ['POST'])
+def done():
+    if request.method == 'POST':
+        eventId = request.form['eventId']
+        done = "Done"
+        con = sqlite3.connect('database.db')
+        con.execute("UPDATE events SET done = ? WHERE eventId = ?", (done, eventId))
+        con.commit()
+        con.close()
+        return redirect(url_for('events'))
 
 if __name__ == '__main__':
     app.run(debug = True)

@@ -160,8 +160,16 @@
               <!-- background-color:#00000056;  -->
               {% for data in e %}
               <div class="shadow-sm w-100 p-1" style="background-color: white; margin-bottom: 10px; color: black; border-radius: 10px; border: 2px solid violet;">
-                  <div class="text-center" style="margin-top: 10px;">
-                      <h4>{{data[1]}} </h4>
+                  <div class="row text-center">
+                    <div class="col-sm-2 text-center" style="margin-top: 5px;">
+                          <p>{{data[7]}}</p>
+                    </div>
+                    <div class="col-sm-8 text-center" style="margin-top: 10px;">
+                        <h4>{{data[1]}} </h4>
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <p style="color: green; text-align: right; margin-right: 10px; margin-top: 5px;">{{data[8]}}</p>
+                    </div>
                   </div>
                   <hr>
                   <div style="display:none;">
@@ -186,6 +194,14 @@
                   </div>
                   <hr>
                   <div class="row p-2">
+                    <div class="col" style="text-align: center;">
+                      <form action="/done" method="POST">
+                      <input style="display: none;" type="number" value="{{data[6]}}" name="eventId">
+                      <button type="submit" class="btn btn-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z"></path></svg>
+                      </button>
+                    </form>
+                    </div>
                     <div class="col" style="text-align: center;">
                       <form action="/share" method="POST">
                       <input style="display: none;" type="number" value="{{data[6]}}" name="eventId">
