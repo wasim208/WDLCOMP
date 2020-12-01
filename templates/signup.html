@@ -7,23 +7,23 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
     <body style="background-color: whitesmoke;">
-        <nav class="shadow-sm navbar navbar-default">
-            <div class="container-fluid">
-              <div class="navbar-header">
-                <a class="navbar-brand" href="/home"><b>Jot Down</b></a>
-              </div>
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-              </ul>
-            </div>
-          </nav>
+      <nav class="shadow-sm navbar navbar-default" style="height: 80px;">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand text-white" href="/home"><img src="../static/assets/img/gist.jpg" height="50px"></a>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href=""><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </ul>
+        </div>
+      </nav>
           <div>
               <div class="row" style="margin: 10px;">
                     <div class="col-sm-6">
                         <img width="50%" style="padding: '10px'; margin: 50px 10px 20px 100px;" src="{{url_for('static', filename = 'undraw_noted.svg')}}">
-                        <h3 style="text-align: center; font-size: xx-large;"><b>Jot Down</b></h3>
-                        <p style="text-align: center; font-size: large;">Jot Down is a online planner and Journal website. Where you can easily maintain your Journal and take notes.</p>
+                        <h3 style="text-align: center; font-size: xx-large;"><b>Gist.</b></h3>
+                        <p style="text-align: center; font-size: large;"><strong>Gist.</strong> is a simple and easy to use webapp that lets you connet with your friends and share your thoughts through tweets and share events.</p>
                     </div>
                     <div class="col-sm-6" height: 50%;">
                       <br>

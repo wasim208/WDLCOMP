@@ -4,10 +4,20 @@ import random
 import string
 import sys
 import timeago
+import os
+import boto3
 from datetime import datetime
 from pydb import fetchEvents, fetchUser, fetchFriendsdata, fetchFriends, fetchFriendRequests, fetchTweets, updateNumEvents, updateNumFriends, updateNumTweets, checkRequestExists, unfollowUser
 
+app = Flask(__name__)
 letters = string.ascii_lowercase
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
+
+def upload(file_name, bucket, object_name=None):
+    s3_client = boto3.client('s3')
+    response = s3_client.upload_file(file_name, bucket, 'wdlproject/{}'.format(file_name))
+    return True
 
 def get_random_string():
     result = ''.join(random.choice(letters) for i in range(15))
@@ -79,6 +89,9 @@ def signup():
 @app.route('/home')
 def home():
     if 'id' in session:
+        frndRequests = fetchFriendRequests(session['username'])
+        if(len(frndRequests) > 0):
+             return render_template('home.html', alert = len(frndRequests))
         return render_template('home.html')
     else:
         return redirect(url_for('login'))
@@ -268,14 +281,28 @@ def decline():
 @app.route('/tweets', methods = ['POST', 'GET'])
 def tweets():
     if request.method == 'POST':
+        global f_name
         username = session['username']
         message = request.form['message']
         posttime = str(datetime.now())[0:19]
         Id = random.randint(0, 9999999999)
-        con = sqlite3.connect('database.db')
-        con.execute("INSERT INTO tweets (username, message, postTime, Id) VALUES (?, ?, ?, ?)", (username, message, posttime, Id))
-        con.commit()
-        con.close()
+        if request.files['fileupload']:
+            f = request.files['fileupload']
+            f_name='static/uploads/'+str(Id)+'.'+f.filename.split('.')[1]
+            uploadedIMG = os.path.join(f_name)
+            f.save(uploadedIMG)
+            f.save(os.path.join(str(Id)+'.'+f.filename.split('.')[1]))
+            upload(str(Id)+'.'+f.filename.split('.')[1],'wdlminiproject')
+            os.remove(str(Id)+'.'+f.filename.split('.')[1])
+            con = sqlite3.connect('database.db')
+            con.execute("INSERT INTO tweets (username, message, postTime, Id, filename) VALUES (?, ?, ?, ?, ?)", (username, message, posttime, Id, f_name))
+            con.commit()
+            con.close()
+        else:
+            con = sqlite3.connect('database.db')
+            con.execute("INSERT INTO tweets (username, message, postTime, Id) VALUES (?, ?, ?, ?)", (username, message, posttime, Id))
+            con.commit()
+            con.close()
     if 'id' in session:
         username = session['username']
         frndRequests = fetchFriendRequests(username)
@@ -293,6 +320,7 @@ def tweets():
                 tweets.append(j)
         tweets.sort(reverse = True)
         if(len(frndRequests) > 0):
+            print(tweets)
             return render_template('tweets.html', tweets = tweets, alert = len(frndRequests))
         return render_template('tweets.html', tweets = tweets)
     return redirect(url_for('home'))

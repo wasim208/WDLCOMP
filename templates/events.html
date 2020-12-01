@@ -8,7 +8,7 @@
 </head>
 <body style="background: url(../static/mountain.jpg); background-size: 250vh;  background-repeat: no-repeat; background-position: center; background-attachment: fixed; overflow-x: hidden;">
   <nav class="navbar navbar-expand-md navbar-dark bg-blak sticky-top" style="background-color: rgba(52, 52, 52) !important;"> 
-    <a class="navbar-brand text-white" href="">Jot Down</a>
+    <a class="navbar-brand text-white" href="/home"><img src="../static/assets/img/gist.jpg" height="50px"></a>
     <button class="navbar-toggler" data-toggle="collapse" data-target="#navmenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -43,7 +43,7 @@
           <li class="nav-item">
               <a href="/notifications" class="nav-link">
                   <center>
-                      Notification
+                      Notification {% if alert %}<span style="border-radius: 50%; width: 25px;" class="badge badge-danger">{{alert}}</span>{% endif %}
                   </center>
               </a>
           </li>
