@@ -1,0 +1,4 @@
+accesskey AKIAT7RL5ZRY6RPZ5UGV
+secret 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
+region ap-south-1
+format text
